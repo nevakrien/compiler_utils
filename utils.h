@@ -63,7 +63,7 @@ static inline void* null_check(void* p){
 #define ENSURE_CAPACITY(arr) do {\
     if((arr)->len >(arr)->capacity){\
         (arr) -> capacity = 1+2*(arr) -> len;\
-        (arr) ->data = null_check(realloc((arr) ->data),sizeof(*(arr) ->data )* (arr) -> capacity);\
+        (arr) ->data = null_check(realloc((arr) ->data,sizeof(*(arr) ->data )* (arr) -> capacity));\
     }\
 } while(0)\
 
@@ -74,8 +74,8 @@ static inline void* null_check(void* p){
 }while(0)\
 
 #define SHRINK_TO_FIT(arr) do{\
-    void* new_data = realloc((arr) -> data,sizeof(*(arr) ->data )* (arr)-> len);
-    (arr) -> data = new_data? new_data : (arr) -> data;
+    void* new_data = realloc((arr) -> data,sizeof(*(arr) ->data )* (arr)-> len);\
+    (arr) -> data = new_data? new_data : (arr) -> data;\
 }while(0)\
 
 #define SHRINK(arr) do{\
