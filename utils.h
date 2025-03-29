@@ -1,4 +1,3 @@
-
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -54,9 +53,16 @@ static inline void* null_check(void* p){
     return p;
 }
 
+#define DEFINE_VECTOR_TYPE(T, Name) \
+    typedef struct { \
+        T* data; \
+        size_t len, capacity; \
+    } Name
+
+
 #define ENSURE_CAPACITY(arr) do {\
-    if(++((arr)->len)>(arr)->capacity){\
-        (arr) -> capacity = 1+2*(arr) -> capacity;\
+    if((arr)->len >(arr)->capacity){\
+        (arr) -> capacity = 1+2*(arr) -> len;\
         (arr) ->data = null_check(realloc((arr) ->data),sizeof(*(arr) ->data )* (arr) -> capacity);\
     }\
 } while(0)\
@@ -65,6 +71,16 @@ static inline void* null_check(void* p){
       (arr)->len++;\
       ENSURE_CAPACITY(arr);\
       (arr)->data[(arr)->len-1] = elem;\
+}while(0)\
+
+#define SHRINK_TO_FIT(arr) do{\
+    void* new_data = realloc((arr) -> data,sizeof(*(arr) ->data )* (arr)-> len);
+    (arr) -> data = new_data? new_data : (arr) -> data;
+}while(0)\
+
+#define SHRINK(arr) do{\
+    if(2*(arr)->len < (arr)->capacity)\
+        SHRINK_TO_FIT(arr);\
 }while(0)\
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
